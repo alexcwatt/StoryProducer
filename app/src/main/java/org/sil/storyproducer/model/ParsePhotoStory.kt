@@ -58,6 +58,7 @@ fun parsePhotoStoryXML(context: Context, storyPath: androidx.documentfile.provid
     }
 
     if (slides.isEmpty()) {
+        // xmlContents.close()
         return null
     }
 
@@ -74,6 +75,8 @@ fun parsePhotoStoryXML(context: Context, storyPath: androidx.documentfile.provid
     slide.musicFile = MUSIC_NONE
     //add as second last slide
     slides.add(slides.size-1,slide)
+
+    xmlContents.close()
 
     return Story(storyPath.name!!,slides).apply {
         importAppVersion = BuildConfig.VERSION_NAME
