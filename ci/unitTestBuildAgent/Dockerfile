@@ -9,10 +9,12 @@ ARG SERVER_URL
 ENV ANDROID_HOME=$ANDROID_HOME
 ENV SERVER_URL=$SERVER_URL
 
+# Update package lists and install required packages
+USER root
 RUN  apt-get update -y && \
-     apt-get -y autoremove && \
-     apt-get clean
-     
+    apt-get -y autoremove && \
+    apt-get clean
+
 RUN apt-get install -y zip \
     unzip
 
@@ -21,6 +23,9 @@ WORKDIR /opt/android-sdk
 COPY sdk-tools-linux-*.zip ./sdk.zip
 RUN unzip -q sdk.zip
 RUN rm sdk.zip
-RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
-RUN $ANDROID_HOME/tools/bin/sdkmanager --update
-RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" "platforms;android-${ANDROID_VERSION}" "platform-tools"
+RUN yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --licenses
+RUN $ANDROID_HOME/cmdline-tools/bin/sdkmanager --update
+RUN $ANDROID_HOME/cmdline-tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" "platforms;android-${ANDROID_VERSION}" "platform-tools"
+
+# Switch back to teamcity user
+USER teamcity
